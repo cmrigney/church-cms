@@ -6,6 +6,7 @@ import { User } from "./entity/user";
 import * as session from "express-session";
 import * as bodyParser from "body-parser";
 import * as path from "path";
+import adminRoutes from "./admin/routes";
 
 export function createApp() : express.Express {
   const app = express();
@@ -37,23 +38,41 @@ export function createApp() : express.Express {
   });
 
   app.use('/admin', express.static(path.join(__dirname, "../../client/build")));
-  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(bodyParser.json());
   app.use(session({ secret: 'some secret'}));
   app.use(passport.initialize());
   app.use(passport.session());
 
-  app.get('/admin/logout', (req, res) => {
+  app.use('/api/admin', adminRoutes);
+
+  app.post('/admin/logout', (req, res) => {
     req.logout();
-    res.redirect('/admin/login');
+    res.sendStatus(200);
   });
 
-  app.post('/admin/login', passport.authenticate('local', { 
-    successRedirect: '/admin',
-    failureRedirect: '/admin/login',
-    failureFlash: true }));
+  app.post('/admin/login', function(req, res, next) {
+    passport.authenticate('local', function(err, user, info) {
+      if (err) { return res.status(401).json({ error: err.message }); }
+      if(!user)
+        return res.status(401).json({ error: info.message });
+
+      req.logIn(user, function(err) {
+        if (err) { return next(err); }
+        return res.sendStatus(200);
+      });
+    })(req, res, next);
+  });
   
 
   app.get('/', (req, res) => res.send('Hello'));
+
+  //spa fallback
+  app.use((req, res, next) => {
+    if(req.path.toLowerCase().startsWith('/admin')) {
+      return res.sendFile('index.html', { root: path.join(__dirname, '../../client/build') });
+    }
+    next();
+  });
 
   return app;
 }

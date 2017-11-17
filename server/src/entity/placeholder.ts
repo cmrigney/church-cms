@@ -6,7 +6,7 @@ export class Placeholder extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(type => PageTemplate, pageTemplate => pageTemplate.placeholders)
+  @ManyToOne(type => PageTemplate, pageTemplate => pageTemplate.placeholders, { cascadeAll: true, onDelete: 'CASCADE' })
   pageTemplate: PageTemplate;
 
   @Column()

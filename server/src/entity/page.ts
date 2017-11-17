@@ -1,5 +1,6 @@
-import {Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToMany} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToMany, OneToOne, JoinColumn} from "typeorm";
 import { PageContent } from "./page-content";
+import { PageTemplate } from "./page-template";
 
 @Entity()
 export class Page extends BaseEntity {
@@ -12,9 +13,10 @@ export class Page extends BaseEntity {
   @Column()
   path: string;
 
-  @Column()
-  pageTemplateId: number;
+  @OneToOne(type => PageTemplate)
+  @JoinColumn()
+  pageTemplate: PageTemplate;
 
-  @OneToMany(type => PageContent, pageContent => pageContent.page)
+  @OneToMany(type => PageContent, pageContent => pageContent.page, { cascadeInsert: true, cascadeUpdate: true })
   pageContents: PageContent[];
 }

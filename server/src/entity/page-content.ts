@@ -6,7 +6,7 @@ export class PageContent extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(type => Page, page => page.pageContents)
+  @ManyToOne(type => Page, page => page.pageContents, { cascadeAll: true, onDelete: 'CASCADE' })
   page: Page;
 
   @Column()
