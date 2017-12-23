@@ -32,6 +32,7 @@
     {
       "type": "shell",
       "command": "npm run build-part",
+      "identifier": "build-client",
       "label": "Build Client",
       "options": {
         "cwd": "${workspaceRoot}/client"
