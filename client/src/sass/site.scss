@@ -12,6 +12,10 @@
   padding-top: 20px;
 }
 
+.mt10 {
+  margin-top: 10px;
+}
+
 .btn {
   cursor: pointer;
 }
@@ -19,4 +23,16 @@
 .table-button {
   margin-left: 5px;
   margin-right: 5px;
+}
+
+.draft-editor {
+  border: 1px solid #F1F1F1;
+  border-radius: 2px;
+  height: 200px !important;
+  padding: 5px;
+}
+
+.html-editor {
+  border: 1px solid #F1F1F1;
+  border-radius: 2px;
 }

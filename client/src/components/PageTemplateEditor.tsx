@@ -1,12 +1,15 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
-import { EditorState } from 'draft-js';
 import { PageTemplate } from '../models/page-template';
 import { Placeholder } from '../models/placeholder';
 import * as _ from 'lodash';
 import axios from 'axios';
 import { TaskButton } from '../library/task-button';
 import { LoadingSpinner } from '../library/loading-spinner';
+import {Controlled as CodeMirror} from 'react-codemirror2'
+import 'codemirror/mode/xml/xml.js';
+import 'codemirror/lib/codemirror.css';
+//import 'codemirror/theme/3024-day.css';
 
 interface PageTemplateEditorState {
   pageTemplate: PageTemplate;
@@ -70,8 +73,7 @@ export class PageTemplateEditor extends React.Component<RouteComponentProps<{ id
     });
   }
 
-  contentChanged = (ev: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const content = ev.currentTarget.value || '';
+  contentChanged = (content: string) => {
     const keys = (content.match(/@@([a-zA-Z0-9\-_]+?)@@/g) || []).map((v) => v.replace(/@@/g, ''));
 
     let placeholders = this.state.pageTemplate.placeholders.slice(0); //clone array
@@ -118,7 +120,18 @@ export class PageTemplateEditor extends React.Component<RouteComponentProps<{ id
             </div>
             <div className="form-group">
               <label>HTML Content</label>
-              <textarea className="form-control" rows={4} onChange={this.contentChanged} defaultValue={this.state.pageTemplate.content}></textarea>
+              <CodeMirror
+                value={this.state.pageTemplate.content}
+                className="html-editor"
+                options={{
+                  mode: 'xml',
+                  //theme: '3024-day',
+                  lineNumbers: true,
+                }}
+                onBeforeChange={(editor, data, value) => {
+                  this.contentChanged(value);
+                }}
+              />
             </div>
             {this.state.pageTemplate.placeholders.map(p => 
               <div key={p.key} className="form-group">

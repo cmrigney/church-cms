@@ -8,6 +8,7 @@
     "build-part": "webpack"
   },
   "devDependencies": {
+    "@types/codemirror": "0.0.53",
     "@types/draft-js": "^0.10.17",
     "@types/history": "4.6.0",
     "@types/jest": "^21.1.1",
@@ -55,9 +56,14 @@
   },
   "dependencies": {
     "@types/toastr": "^2.1.35",
+    "codemirror": "^5.31.0",
     "draft-js": "^0.10.4",
+    "draftjs-to-html": "^0.7.6",
     "font-awesome": "^4.7.0",
+    "html-to-draftjs": "^1.0.1",
+    "immutable": "^3.8.2",
     "lodash": "^4.17.4",
+    "react-codemirror2": "^3.0.7",
     "react-draft-wysiwyg": "^1.10.12",
     "showdown": "1.7.4",
     "toastr": "^2.1.2"

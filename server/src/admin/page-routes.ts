@@ -18,6 +18,7 @@ pageRouter.get('/:id',  auth(asyncHandler(async (req, res) => {
   const page = await Page.findOneById(req.params.id, { relations: ['pageTemplate', 'pageContents'] });
   if(!page)
     return res.sendStatus(404);
+  page.pageTemplate.placeholders = await Placeholder.find({ where: { pageTemplate: page.pageTemplate.id } });
   return res.json(page);
 })));
 
