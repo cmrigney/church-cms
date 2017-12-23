@@ -26,6 +26,7 @@
       "name": "Launch Chrome",
       "type": "chrome",
       "request": "launch",
+      "preLaunchTask": "build-client",
       "url": "http://localhost:3000/",
       "webRoot": "${workspaceRoot}"
     }
