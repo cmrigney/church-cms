@@ -5,6 +5,7 @@ import { PageTemplate } from "../entity/page-template";
 import { validate } from "class-validator";
 import * as _ from 'lodash';
 import { Placeholder } from "../entity/placeholder";
+import { invalidatePageCache } from '../services/cache/page-cache';
 
 const pageTemplateRouter = Router();
 
@@ -30,11 +31,13 @@ pageTemplateRouter.put('/:id',  auth(asyncHandler(async (req, res) => {
   pageTemplate.placeholders = pageTemplate.placeholders.map((p => _.assign(new Placeholder(), _.pick(p, ['id', 'key', 'description']))));
 
   await pageTemplate.save();
+  invalidatePageCache();
   return res.json(pageTemplate);
 })));
 
 pageTemplateRouter.delete('/:id',  auth(asyncHandler(async (req, res) => {
   await PageTemplate.removeById(req.params.id);
+  invalidatePageCache();
   return res.sendStatus(200);
 })));
 
@@ -46,6 +49,7 @@ pageTemplateRouter.post('/', auth(asyncHandler(async (req, res) => {
     return res.status(400).json(errors);
   
   await pageTemplate.save();
+  invalidatePageCache();
   return res.status(201).json(pageTemplate);
 })));
 

@@ -249,10 +249,6 @@ export class PageEditor extends React.Component<RouteComponentProps<{ id: string
               </div>
               {this.state.page.pageTemplate.placeholders.length > 0 ?
               <div className="card-body">
-                <h4 className="card-title">Webpage Contents</h4>
-                <p className="card-text">
-                  Something
-                </p>
                 <Editor
                   editorState={this.state.activeEditorState}
                   wrapperClassName="draft-editor-wrapper"

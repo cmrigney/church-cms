@@ -7,6 +7,7 @@ import * as session from "express-session";
 import * as bodyParser from "body-parser";
 import * as path from "path";
 import adminRoutes from "./admin/routes";
+import siteRoutes from './site';
 
 export function createApp() : express.Express {
   const app = express();
@@ -63,8 +64,8 @@ export function createApp() : express.Express {
     })(req, res, next);
   });
   
-
-  app.get('/', (req, res) => res.send('Hello'));
+  app.use(siteRoutes);
+  app.get('/', (req, res) => res.send('No home page set'));
 
   //spa fallback
   app.use((req, res, next) => {

@@ -7,6 +7,7 @@ import * as _ from 'lodash';
 import { Placeholder } from "../entity/placeholder";
 import { Page } from "../entity/page";
 import { PageContent } from "../entity/page-content";
+import { invalidatePageCache } from '../services/cache/page-cache';
 
 const pageRouter = Router();
 
@@ -31,13 +32,17 @@ pageRouter.put('/:id',  auth(asyncHandler(async (req, res) => {
   
   // do this so classes are created
   page.pageContents = page.pageContents.map((p => _.assign(new PageContent(), _.pick(p, ['id', 'key', 'content']))));
+  // lower case for consistency
+  page.path = page.path.toLowerCase();
 
   await page.save();
+  invalidatePageCache();
   return res.json(page);
 })));
 
 pageRouter.delete('/:id',  auth(asyncHandler(async (req, res) => {
   await Page.removeById(req.params.id);
+  invalidatePageCache();
   return res.sendStatus(200);
 })));
 
@@ -45,10 +50,13 @@ pageRouter.post('/', auth(asyncHandler(async (req, res) => {
   const page = new Page();
   Object.assign(page, req.body);
   let errors = await validate(page, { validationError: { target: false } });
+  // lower case consistently
+  page.path = page.path.toLowerCase();
   if(errors.length > 0)
     return res.status(400).json(errors);
   
   await page.save();
+  invalidatePageCache();
   return res.status(201).json(page);
 })));
 
